@@ -15,6 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/users', 'LA\UsersController@react_native_api');
 /* ================== Homepage + Admin Routes ================== */
 
 require __DIR__.'/admin_routes.php';

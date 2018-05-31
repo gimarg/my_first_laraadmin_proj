@@ -57,6 +57,20 @@ class UsersController extends Controller
         }
 	}
 
+  public function react_native_api()
+  {
+    $users = User::all()->toArray();
+    // return $users;
+    // return response()->json($users);
+    return response()->json(array('users'=>$users));
+  //   return response()->json([
+  //     "title"=> "The Basics - Networking",
+  // "description"=> "Your app fetched this from a remote endpoint!"
+  // ]);
+    // $response = response()->json($query->first(), $users);
+    // return Response::json($users->toArray());
+  } 
+
 	/**
 	 * Display the specified user.
 	 *
