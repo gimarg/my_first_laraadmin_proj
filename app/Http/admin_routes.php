@@ -67,4 +67,11 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
 	Route::get(config('laraadmin.adminRoute') . '/backup_dt_ajax', 'LA\BackupsController@dtajax');
 	Route::post(config('laraadmin.adminRoute') . '/create_backup_ajax', 'LA\BackupsController@create_backup_ajax');
 	Route::get(config('laraadmin.adminRoute') . '/downloadBackup/{id}', 'LA\BackupsController@downloadBackup');
+	/* ================== Costs ================== */
+	Route::resource(config('laraadmin.adminRoute') . '/costs', 'LA\CostsController');
+	Route::get(config('laraadmin.adminRoute') . '/cost_dt_ajax', 'LA\CostsController@dtajax');
+
+	/* ================== Type_of_Costs ================== */
+	Route::resource(config('laraadmin.adminRoute') . '/type_of_costs', 'LA\Type_of_CostsController');
+	Route::get(config('laraadmin.adminRoute') . '/type_of_cost_dt_ajax', 'LA\Type_of_CostsController@dtajax');
 });

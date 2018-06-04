@@ -16,6 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('/users', 'LA\UsersController@react_native_api');
+Route::get('/user_costs', 'LA\Costs_per_UserController@show');
 /* ================== Homepage + Admin Routes ================== */
 
 require __DIR__.'/admin_routes.php';
