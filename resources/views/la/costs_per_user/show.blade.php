@@ -98,7 +98,13 @@
 					<div class="panel-default panel-heading">
 						<h4>General Info</h4>
             {{ $user_costs }}
-					</div>
+					</div>        
+          <div id="chart-div"></div>
+          @if(Lava::exists('PieChart', 'Outcome'))
+            @piechart('Outcome', 'chart-div')
+          @else
+              <p>Chart not found!</p>
+          @endif
 				</div>
 			</div>
 		</div>
@@ -202,3 +208,4 @@
 	</div>
 </div>
 @endsection
+

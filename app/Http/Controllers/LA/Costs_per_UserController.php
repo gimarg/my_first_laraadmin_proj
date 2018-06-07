@@ -17,6 +17,8 @@ use Collective\Html\FormFacade as Form;
 use Dwij\Laraadmin\Models\Module;
 use Dwij\Laraadmin\Models\ModuleFields;
 
+use Khill\Lavacharts\Lavacharts;
+
 // use App\Models\Cost;
 
 class Costs_per_UserController extends Controller
@@ -37,69 +39,8 @@ class Costs_per_UserController extends Controller
 		}
 	}
 	
-	/**
-	 * Display a listing of the Costs.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	// public function index()
-	// {
-	// 	$module = Module::get('Costs');
-		
-	// 	if(Module::hasAccess($module->id)) {
-	// 		return View('la.costs.index', [
-	// 			'show_actions' => $this->show_action,
-	// 			'listing_cols' => $this->listing_cols,
-	// 			'module' => $module
-	// 		]);
-	// 	} else {
-  //           return redirect(config('laraadmin.adminRoute')."/");
-  //       }
-	// }
 
-	/**
-	 * Show the form for creating a new cost.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create()
-	{
-		//
-	}
 
-	/**
-	 * Store a newly created cost in database.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	// public function store(Request $request)
-	// {
-	// 	if(Module::hasAccess("Costs", "create")) {
-		
-	// 		$rules = Module::validateRules("Costs", $request);
-			
-	// 		$validator = Validator::make($request->all(), $rules);
-			
-	// 		if ($validator->fails()) {
-	// 			return redirect()->back()->withErrors($validator)->withInput();
-	// 		}
-			
-	// 		$insert_id = Module::insert("Costs", $request);
-			
-	// 		return redirect()->route(config('laraadmin.adminRoute') . '.costs.index');
-			
-	// 	} else {
-	// 		return redirect(config('laraadmin.adminRoute')."/");
-	// 	}
-	// }
-
-	/**
-	 * Display the specified cost.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
 	public function show()
 	{
     // $user = DB::table('users')->where('name', 'John')->first();
@@ -115,13 +56,34 @@ class Costs_per_UserController extends Controller
 		// 	if(isset($cost->id)) {
 				$module = Module::get('Costs');
 				// $module->row = $cost;
-				
+
+        // $lava = new Lavacharts; // See note below for Laravel
+
+        $expenses = \Lava::DataTable();
+
+        $expenses->addStringColumn('Expenses')
+                ->addNumberColumn('Percent')
+                ->addRow(['Books', 10])
+                ->addRow(['Food', 35])
+                ->addRow(['Sports', 25])
+                ->addRow(['Pets', 30]);
+
+        \Lava::PieChart('Outcome', $expenses, [
+            'title'  => 'My Personal Accountant',
+            'is3D'   => true,
+            'slices' => [
+                ['offset' => 0.2],
+                ['offset' => 0.25],
+                ['offset' => 0.3]
+            ]
+        ]);
+
 				return view('la.costs_per_user.show', [
           'user_costs' => $user_costs,
 					'module' => $module,
 					'no_header' => true,
-					'no_padding' => "no-padding"
-				]);
+          'no_padding' => "no-padding"
+				])->render();
 		// 	} else {
 		// 		return view('errors.404', [
 		// 			'record_id' => $id,
@@ -133,124 +95,27 @@ class Costs_per_UserController extends Controller
 		// }
 	}
 
-// 	/**
-// 	 * Show the form for editing the specified cost.
-// 	 *
-// 	 * @param  int  $id
-// 	 * @return \Illuminate\Http\Response
-// 	 */
-// 	public function edit($id)
-// 	{
-// 		if(Module::hasAccess("Costs", "edit")) {			
-// 			$cost = Cost::find($id);
-// 			if(isset($cost->id)) {	
-// 				$module = Module::get('Costs');
-				
-// 				$module->row = $cost;
-				
-// 				return view('la.costs.edit', [
-// 					'module' => $module,
-// 					'view_col' => $this->view_col,
-// 				])->with('cost', $cost);
-// 			} else {
-// 				return view('errors.404', [
-// 					'record_id' => $id,
-// 					'record_name' => ucfirst("cost"),
-// 				]);
-// 			}
-// 		} else {
-// 			return redirect(config('laraadmin.adminRoute')."/");
-// 		}
-// 	}
+  public function charts() 
+  {
+    // $lava = new Lavacharts; // See note below for Laravel
 
-// 	/**
-// 	 * Update the specified cost in storage.
-// 	 *
-// 	 * @param  \Illuminate\Http\Request  $request
-// 	 * @param  int  $id
-// 	 * @return \Illuminate\Http\Response
-// 	 */
-// 	public function update(Request $request, $id)
-// 	{
-// 		if(Module::hasAccess("Costs", "edit")) {
-			
-// 			$rules = Module::validateRules("Costs", $request, true);
-			
-// 			$validator = Validator::make($request->all(), $rules);
-			
-// 			if ($validator->fails()) {
-// 				return redirect()->back()->withErrors($validator)->withInput();;
-// 			}
-			
-// 			$insert_id = Module::updateRow("Costs", $request, $id);
-			
-// 			return redirect()->route(config('laraadmin.adminRoute') . '.costs.index');
-			
-// 		} else {
-// 			return redirect(config('laraadmin.adminRoute')."/");
-// 		}
-// 	}
+    $reasons = Lava::DataTable();
 
-// 	/**
-// 	 * Remove the specified cost from storage.
-// 	 *
-// 	 * @param  int  $id
-// 	 * @return \Illuminate\Http\Response
-// 	 */
-// 	public function destroy($id)
-// 	{
-// 		if(Module::hasAccess("Costs", "delete")) {
-// 			Cost::find($id)->delete();
-			
-// 			// Redirecting to index() method
-// 			return redirect()->route(config('laraadmin.adminRoute') . '.costs.index');
-// 		} else {
-// 			return redirect(config('laraadmin.adminRoute')."/");
-// 		}
-// 	}
-	
-// 	/**
-// 	 * Datatable Ajax fetch
-// 	 *
-// 	 * @return
-// 	 */
-// 	public function dtajax()
-// 	{
-// 		$values = DB::table('costs')->select($this->listing_cols)->whereNull('deleted_at');
-// 		$out = Datatables::of($values)->make();
-// 		$data = $out->getData();
+    $reasons->addStringColumn('Reasons')
+            ->addNumberColumn('Percent')
+            ->addRow(['Check Reviews', 5])
+            ->addRow(['Watch Trailers', 2])
+            ->addRow(['See Actors Other Work', 4])
+            ->addRow(['Settle Argument', 89]);
 
-// 		$fields_popup = ModuleFields::getModuleFields('Costs');
-		
-// 		for($i=0; $i < count($data->data); $i++) {
-// 			for ($j=0; $j < count($this->listing_cols); $j++) { 
-// 				$col = $this->listing_cols[$j];
-// 				if($fields_popup[$col] != null && starts_with($fields_popup[$col]->popup_vals, "@")) {
-// 					$data->data[$i][$j] = ModuleFields::getFieldValue($fields_popup[$col], $data->data[$i][$j]);
-// 				}
-// 				if($col == $this->view_col) {
-// 					$data->data[$i][$j] = '<a href="'.url(config('laraadmin.adminRoute') . '/costs/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
-// 				}
-// 				// else if($col == "author") {
-// 				//    $data->data[$i][$j];
-// 				// }
-// 			}
-			
-// 			if($this->show_action) {
-// 				$output = '';
-// 				if(Module::hasAccess("Costs", "edit")) {
-// 					$output .= '<a href="'.url(config('laraadmin.adminRoute') . '/costs/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
-// 				}
-				
-// 				if(Module::hasAccess("Costs", "delete")) {
-// 					$output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.costs.destroy', $data->data[$i][0]], 'method' => 'delete', 'style'=>'display:inline']);
-// 					$output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';
-// 					$output .= Form::close();
-// 				}
-// 				$data->data[$i][] = (string)$output;
-// 			}
-// 		}
-// 		$out->setData($data);
-// 		return $out;
-// 	}
+    Lava::PieChart('IMDB', $reasons, [
+        'title'  => 'Reasons I visit IMDB',
+        'is3D'   => true,
+        'slices' => [
+            ['offset' => 0.2],
+            ['offset' => 0.25],
+            ['offset' => 0.3]
+        ]
+    ]);
+  }
 }
